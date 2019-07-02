@@ -3,13 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@sendgrid/mail": "^6.4.0",
+    "crypto": "^1.0.1",
+    "eslint": "^5.16.0",
     "express": "^4.17.1",
+    "express-session": "^1.16.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-redux": "^7.1.0",
+    "react-scripts": "3.0.1",
+    "redux": "^4.0.1",
+    "redux-actions": "^2.6.5",
+    "redux-thunk": "^2.3.0",
+    "uniqid": "^5.0.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start-server-nodemon": "nodemon --exec npm run start-server",
+    "start-server": "babel-node src/server.js",
+    "start": "npm run start-server-nodemon & npm run start-client",
+    "start-client": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -32,11 +44,10 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
-    "babel-eslint": "^10.0.2",
     "babel-plugin-syntax-flow": "^6.18.0",
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
-    "eslint": "^6.0.1",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-plugin-flowtype": "^3.11.1",
     "eslint-plugin-import": "^2.18.0",
