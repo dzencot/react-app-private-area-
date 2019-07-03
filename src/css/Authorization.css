@@ -1,0 +1,13 @@
+.authorization {
+  position: absolute;
+  margin: auto;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-51%, -51%)
+}
+
+.authorization-form {
+  padding: 20px;
+  box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.2), 0 8px 12px 0 rgba(0, 0, 0, 0.19);
+}

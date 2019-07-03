@@ -1,34 +1,48 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
+import { reducer as formReducer } from 'redux-form';
 import * as actions from '../actions';
 
-const urlServer = 'http://localhost:8000';
+const authorizationState = handleActions({
+  [actions.authorizationSuccess]() {
+    return 'success';
+  },
+  [actions.authorizationRequest]() {
+    return 'requested';
+  },
+  [actions.authorizationFailure]() {
+    return 'failed';
+  },
+}, 'none');
 
-const auth = handleActions({
-  [actions.auth](state, { payload }) {
-    const { login, pass } = payload;
-    const data = { login, pass };
-    console.log('auth');
-    console.log(payload);
-    fetch(`${urlServer}/auth`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }).then((response) => {
-      console.log('response:');
-      console.log(response);
-    });
+const registrationState = handleActions({
+  [actions.registrationSuccess]() {
+    return 'success';
   },
-  [actions.checkAuth](state, { payload }) {
-    console.log(payload);
+  [actions.registrationRequest]() {
+    return 'requested';
   },
-  [actions.deauth](state, { payload }) {
-    console.log(payload);
+  [actions.registrationFailure]() {
+    return 'failed';
+  },
+}, 'none');
+
+const appState = handleActions({
+  [actions.registrationStart](state) {
+    return { ...state, action: 'registration' };
+  },
+  [actions.authorizationSuccess](state) {
+    return { ...state, authorized: true, action: 'info' };
+  },
+  [actions.authorizationFailure](state) {
+    return { ...state, authorized: false };
   },
 }, '');
 
+
 export default combineReducers({
-  auth,
+  authorizationState,
+  registrationState,
+  appState,
+  form: formReducer,
 });

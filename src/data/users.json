@@ -1,4 +1,1 @@
-{
-  "login": "ivan",
-  "pass": "1234"
-}
+[{"login":"dzencot@gmail.com","activated":true,"linkActivation":"http://localhost:8000/registration?login=dzencot@gmail.com&key=i5y16mj53iet47011mzsi","sessions":[],"name":"IVAN","lastName":"GAGARINOV","email":"dzencot@gmail.com","activationKey":"i5y16mj53iet47011mzsi","id":"124jodez7jxneygxv"}]

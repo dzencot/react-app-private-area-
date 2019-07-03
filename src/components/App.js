@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import '../css/App.css';
 
 import Authorization from './Authorization';
+import Registration from './Registration';
+import Info from './Info';
 
 const mapStateToProps = state => {
   const props = {
@@ -13,16 +15,28 @@ const mapStateToProps = state => {
 };
 
 class App extends React.Component {
-  checkAuthorization() {
-    return false;
+
+  getRender(action) {
+    switch (action) {
+      case 'info':
+        return <Info />;
+        break;
+      default:
+        return <Info />;
+    }
   }
 
   render() {
-    if (!this.checkAuthorization()) {
+    const { action, authorized } = this.props.appState
+    if (action === 'registration') {
+      return <Registration />;
+    }
+    if (!authorized) {
       return (
         <Authorization />
       );
     }
+    return this.getRender(action);
   };
 }
 

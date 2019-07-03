@@ -1,0 +1,14 @@
+.registration {
+  padding: 50px;
+}
+
+.registration-input {
+  max-width: 25%;
+}
+
+.registration-input-error {
+  color: red;
+  font-size: smaller;
+  margin-top: 10px;
+}
+
