@@ -1,6 +1,6 @@
 import express from 'express';
 import _ from 'lodash';
-import session from 'express-session';
+// import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import validator from 'validator';
 import { encrypt, getRandomKey } from './utils/encrypt';
@@ -29,10 +29,10 @@ app.use(express.json());
 
 app.use(cors({ credentials: true, }));
 
-app.use(session({
-  resave: false,
-  saveUninitialized: false,
-}));
+// app.use(session({
+//   resave: false,
+//   saveUninitialized: false,
+// }));
 
 app.post('/auth', async (req, res) => {
   const { login, pass } = req.body;
