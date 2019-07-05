@@ -39,10 +39,11 @@ class Registration extends React.Component {
     const { reset, registration } = this.props;
     const { name, lastName, email, pass } = values;
     registration({ name, lastName, email, pass });
+    reset();
   }
 
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, registrationState } = this.props;
     return (
       <div className="registration">
         <form onSubmit={handleSubmit(this.handleSubmit)}>
@@ -74,7 +75,7 @@ class Registration extends React.Component {
           </div>
           <div className="form-group row">
             <div className="col-sm-10">
-              <button type="submit" className="btn btn-primary">Зарегестрироваться</button>
+              <button type="submit" disabled={registrationState === 'requested'} className="btn btn-primary">Зарегестрироваться</button>
             </div>
           </div>
         </form>

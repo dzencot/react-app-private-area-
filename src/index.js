@@ -8,6 +8,7 @@ import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
 import reducers from './reducers';
+
 const store = createStore(reducers, applyMiddleware(thunk));
 
 render(

@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { Field, reduxForm } from 'redux-form';
 // import cn from 'classnames';
 import '../css/Authorization.css';
 import * as actions from '../actions';
@@ -16,10 +17,11 @@ const actionCreators = {
 
 class Authorization extends React.Component {
 
-  auth = (event) => {
-    event.preventDefault();
-    const { authorization } = this.props;
-    authorization({ login: 'ivan', pass: '1234' });
+  handleSubmit = (values) => {
+    const { reset, authorization } = this.props;
+    const { email, password } = values;
+    authorization({ login: email, pass: password });
+    reset();
   };
 
   registration = (event) => {
@@ -29,18 +31,22 @@ class Authorization extends React.Component {
   }
 
   render() {
-    const { authorizationState } = this.props;
+    const { handleSubmit, authorizationState } = this.props;
     return (
       <div className="authorization">
-        <form className="authorization-form">
+        <form className="authorization-form" onSubmit={handleSubmit(this.handleSubmit)}>
           <div className="form-group">
-            <label>Email address</label>
-            <input type="email" className="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Enter email" />
+            <label>Email:</label>
+            <Field name="email" component="input" type="email" className="form-control" id="inputEmail" required aria-describedby="emailHelp" placeholder="Enter email" />
           </div>
           <div className="form-group">
-            <label>Password</label>
-            <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
+            <label>Password:</label>
+            <Field name="password" component="input" type="password" required className="form-control" id="exampleInputPassword1" placeholder="Password" />
           </div>
+          {authorizationState === 'failed' ?
+            <div className="authorization-error">
+              Неверный логин или пароль. Либо пользователь не активирован.
+            </div> : ''}
           <button disabled={authorizationState === 'requested'} type="submit" className="btn btn-primary" onClick={this.auth}>Submit</button>
           <button className="button-registration btn btn-link" onClick={this.registration}>Registration</button>
         </form>
@@ -49,4 +55,8 @@ class Authorization extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, actionCreators)(Authorization);
+const ConnectedAuthorization = connect(mapStateToProps, actionCreators)(Authorization);
+
+export default reduxForm({
+  form: 'newAuthorization',
+})(ConnectedAuthorization);

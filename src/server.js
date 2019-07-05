@@ -6,7 +6,11 @@ import validator from 'validator';
 import { encrypt, getRandomKey } from './utils/encrypt';
 import { sendEmail } from './utils/emailServer';
 import config from '../config';
+import cors from 'cors';
 import * as adminUsers from './utils/adminUsers';
+import * as generator from './utils/generatorFakeData';
+import * as servicesLib from './utils/servicesLib';
+import * as paymentsLib from './utils/paymentsLib';
 
 const app = express();
 
@@ -20,6 +24,8 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+
+app.use(cors({ credentials: true, }));
 
 app.use(cookieParser(config.cookieSecret));
 app.use(session({
@@ -35,25 +41,27 @@ app.post('/auth', async (req, res) => {
   };
   const currentUser = await adminUsers.getUser(user);
   if (currentUser) {
-    res.send(JSON.stringify({
-      status: 1,
-      result: 'authorized'
-    }));
     const sessionKey = getRandomKey();
-    req.session[sessionKeyName] = sessionKey;
-
+    // TODO: настроить сессионные куки
+    req.cookies[sessionKeyName] = sessionKey;
     // TODO: сделать сохранение разных сессий
-    currentUser.sessions = [];
     // if (!currentUser.sessions) {
     //   currentUser.sessions = [];
     // }
+    currentUser.sessions = [];
     currentUser.sessions.push(sessionKey);
     adminUsers.updateUser(currentUser);
+    res.send(JSON.stringify({
+      status: 1,
+      result: 'authorized',
+      key: sessionKey,
+    }));
+
     return;
   }
   res.send(JSON.stringify({
     status: 1,
-    result: 'unathorized'
+    result: 'unathorized',
   }));
 });
 
@@ -80,8 +88,6 @@ app.get('/registration', async (req, res) => {
       return;
     }
   }
-  console.log('test!!!');
-  console.log(currentUser);
   res.send(JSON.stringify({
     status: 0,
     result: 'что-то пошло не так',
@@ -123,18 +129,96 @@ app.post('/registration', async (req, res) => {
     to: login,
   };
 
-  sendEmail(mail);
+  // sendEmail(mail);
   const passEncrypt = encrypt(pass);
   const user = {
-    login, pass: encrypt,
-    activated: false, linkActivation,
-    sessions: [], name, lastName, email, activationKey: randomString };
+    login,
+    pass: passEncrypt,
+    activated: false,
+    sessions: [],
+    name,
+    lastName,
+    email,
+    activationKey: randomString,
+  };
   const result = await adminUsers.addUser(user);
+  if (result) {
+    res.send(JSON.stringify({
+      result: 1, status: 1, text: 'success' }));
+
+    // создаем фейковые данные для демо
+    const services = [];
+    for (let i = 0; i < 50; i += 1) {
+      const service = generator.generateService();
+      service.idAccount = result.id;
+      services.push(service);
+    }
+    servicesLib.addServices(services, result.id);
+
+    const payments = [];
+    for (let i = 0; i < 100; i += 1) {
+      const payment = generator.generatePayment();
+      payment.idAccount = result.id;
+      payments.push(payment);
+    }
+    paymentsLib.addPayments(payments, result.id);
+  }
+  res.send(JSON.stringify({
+    result: 0, status: 0, text: 'error' }));
 });
 
 app.get('/info', (req, res) => {
-  const sessionKey = req.session[sessionKeyName];
+  const sessionKey = req.cookies[sessionKeyName];
+  const { key } = req.query;
   res.send('good bye');
+});
+
+app.get('/payments', async (req, res) => {
+  const sessionKey = req.cookies[sessionKeyName];
+  const { key, page } = req.query;
+  const user = await adminUsers.getUserBySession(key);
+  if (user.length === 0) {
+    res.send(JSON.stringify({
+      result: 0, status: 'unathorized', text: 'unathorized',
+    }));
+    return;
+  }
+
+  const currentAccount = user[0];
+  const count = 10;
+  const offset = count * page;
+  const { payments, countItems } = await paymentsLib.getPayments({ idAccount: currentAccount.id, offset, count });
+  const pages = parseInt(countItems / count);
+  res.send(JSON.stringify({
+    result: 1, status: 1,
+    currentPage: page,
+    pages, payments,
+    offset,
+  }));
+});
+
+app.get('/services', async (req, res) => {
+  const sessionKey = req.cookies[sessionKeyName];
+  const { key, page } = req.query;
+  const user = await adminUsers.getUserBySession(key);
+  if (user.length === 0) {
+    res.send(JSON.stringify({
+      result: 0, status: 'unathorized', text: 'unathorized',
+    }));
+    return;
+  }
+
+  const currentAccount = user[0];
+  const count = 10;
+  const offset = count * page;
+  const { services, countItems } = await servicesLib.getServices({ idAccount: currentAccount.id, offset, count });
+  const pages = parseInt(countItems / count);
+  res.send(JSON.stringify({
+    result: 1, status: 1,
+    currentPage: page,
+    pages, services,
+    offset,
+  }));
 });
 
 app.listen(8000, () => {

@@ -6,6 +6,10 @@ import '../css/App.css';
 import Authorization from './Authorization';
 import Registration from './Registration';
 import Info from './Info';
+import Sevices from './Services';
+import Payments from './Payments';
+
+import * as actions from '../actions';
 
 const mapStateToProps = state => {
   const props = {
@@ -14,13 +18,22 @@ const mapStateToProps = state => {
   return props;
 };
 
+const actionCreators = {
+  openPayments: actions.openPayments,
+  openServices: actions.openServices,
+  openInfo: actions.openInfo,
+};
+
 class App extends React.Component {
 
   getRender(action) {
     switch (action) {
       case 'info':
         return <Info />;
-        break;
+      case 'payments':
+        return <Payments />;
+      case 'services':
+        return <Sevices />;
       default:
         return <Info />;
     }
@@ -28,6 +41,7 @@ class App extends React.Component {
 
   render() {
     const { action, authorized } = this.props.appState
+    const { openInfo, openServices, openPayments } = this.props;
     if (action === 'registration') {
       return <Registration />;
     }
@@ -36,8 +50,28 @@ class App extends React.Component {
         <Authorization />
       );
     }
-    return this.getRender(action);
+    return (
+      <div>
+        <ul className="nav">
+          <li className="nav-item">
+            <a className={action === 'info' ? "disabled nav-link" : "nav-link"} onClick={() => openInfo()} href="#edit">Редактирование профиля</a>
+          </li>
+          <li className="nav-item">
+            <a className={action === 'services' ? "disabled nav-link" : "nav-link"} onClick={() => openServices()} href="#services">Счета</a>
+          </li>
+          <li className="nav-item">
+            <a className={action === 'payments' ? "disabled nav-link" : "nav-link"} onClick={() => openPayments()} href="#payments">История баланса</a>
+          </li>
+          <li className="nav-item">
+            <a className="nav-link" href="/">Выход</a>
+          </li>
+        </ul>
+        {this.getRender(action)}
+      </div>
+    );
   };
 }
 
-export default connect(mapStateToProps)(App);
+const ConnectedPayments = connect(mapStateToProps, actionCreators)(App);
+
+export default ConnectedPayments;

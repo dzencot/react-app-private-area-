@@ -48,20 +48,17 @@ const addUser = async (user) => {
   try {
     const data = JSON.stringify(users);
     const resultWrite = await fs.writeFile(dataPath, data);
-    return true;
+    return user;
   } catch (e) {
     return false;
   }
 };
 
 const updateUser = async (user) => {
-  console.log('update useR!!!!');
   const users = await getUsers();
   const index = _.findIndex(users, {id: 1});
   users.splice(index, 1, user);
 
-  console.log('users:');
-  console.log(users);
   try {
     const data = JSON.stringify(users);
     const resultWrite = await fs.writeFile(dataPath, data);
@@ -87,7 +84,6 @@ const getUserBySession = async (sessionKey) => {
   });
   return foundUser;
 };
-
 
 export {
   getUsers, checkUser, addUser,

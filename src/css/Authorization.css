@@ -8,6 +8,12 @@
 }
 
 .authorization-form {
+  width: 300px;
   padding: 20px;
   box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.2), 0 8px 12px 0 rgba(0, 0, 0, 0.19);
+}
+
+.authorization-error {
+  color: red;
+  font-size: smaller;
 }
