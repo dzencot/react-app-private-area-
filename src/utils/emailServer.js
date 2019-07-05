@@ -1,7 +1,6 @@
-import config from '../../config';
 import mailServer from '@sendgrid/mail';
 
-mailServer.setApiKey(config.mailServer.apiKey);
+mailServer.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendEmail = (msg) => {
   mailServer.send(msg);

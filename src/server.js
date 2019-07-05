@@ -5,12 +5,14 @@ import cookieParser from 'cookie-parser';
 import validator from 'validator';
 import { encrypt, getRandomKey } from './utils/encrypt';
 import { sendEmail } from './utils/emailServer';
-import config from '../config';
 import cors from 'cors';
 import * as adminUsers from './utils/adminUsers';
 import * as generator from './utils/generatorFakeData';
 import * as servicesLib from './utils/servicesLib';
 import * as paymentsLib from './utils/paymentsLib';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
@@ -27,7 +29,6 @@ app.use(express.json());
 
 app.use(cors({ credentials: true, }));
 
-app.use(cookieParser(config.cookieSecret));
 app.use(session({
   resave: false,
   saveUninitialized: false,
@@ -129,7 +130,7 @@ app.post('/registration', async (req, res) => {
     to: login,
   };
 
-  // sendEmail(mail);
+  sendEmail(mail);
   const passEncrypt = encrypt(pass);
   const user = {
     login,
