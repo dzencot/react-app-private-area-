@@ -10,9 +10,6 @@ import * as adminUsers from './utils/adminUsers';
 import * as generator from './utils/generatorFakeData';
 import * as servicesLib from './utils/servicesLib';
 import * as paymentsLib from './utils/paymentsLib';
-import dotenv from 'dotenv';
-
-dotenv.config();
 
 const app = express();
 
@@ -163,6 +160,7 @@ app.post('/registration', async (req, res) => {
       payments.push(payment);
     }
     paymentsLib.addPayments(payments, result.id);
+    return;
   }
   res.send(JSON.stringify({
     result: 0, status: 0, text: 'error' }));

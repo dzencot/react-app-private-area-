@@ -1,4 +1,7 @@
 import mailServer from '@sendgrid/mail';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 mailServer.setApiKey(process.env.SENDGRID_API_KEY);
 

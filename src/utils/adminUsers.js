@@ -7,14 +7,10 @@ const dataPath = path.resolve('./src/data/', 'users.json');
 
 const getUsers = async () => {
   try {
-    const fileExist = await fs.exists(dataPath);
-    if (fileExist) {
-      const data = await fs.readFile(dataPath, 'utf8');
-      const dataUsers = await data ? data : '[]';
-      const users = JSON.parse(dataUsers);
-      return users;
-    }
-    return [];
+    const data = await fs.readFile(dataPath, 'utf8');
+    const dataUsers = await data ? data : '[]';
+    const users = JSON.parse(dataUsers);
+    return users;
   } catch (e) {
     console.log(e);
   }
