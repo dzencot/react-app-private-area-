@@ -18,7 +18,7 @@ const getAllServices = async () => {
 };
 
 const addServices = async (services, idAccount) => {
-  const allServices = getAllServices();
+  const allServices = await getAllServices();
   const servicesWithKeys = services.map(service => ({ ...service, id: uniqid() }));
   const newServices = { ...allServices, [idAccount]: servicesWithKeys };
   try {

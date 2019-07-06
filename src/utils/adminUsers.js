@@ -56,7 +56,7 @@ const addUser = async (user) => {
 
 const updateUser = async (user) => {
   const users = await getUsers();
-  const index = _.findIndex(users, {id: 1});
+  const index = _.findIndex(users, {id: user.id});
   users.splice(index, 1, user);
 
   try {

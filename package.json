@@ -4,21 +4,33 @@
   "private": true,
   "dependencies": {
     "@sendgrid/mail": "^6.4.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-syntax-flow": "^6.18.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-0": "^6.24.1",
     "bootstrap": "^4.3.1",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^8.0.0",
     "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-flowtype": "^3.11.1",
+    "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.14.2",
     "express": "^4.17.1",
     "express-session": "^1.16.2",
     "faker": "^4.1.0",
+    "flow": "^0.2.3",
+    "flow-typed": "^2.5.2",
     "history": "^4.9.0",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.9",
     "react-dom": "^16.8.6",
+    "react-modal": "^3.8.2",
     "react-redux": "^7.1.0",
     "react-router": "^5.0.1",
     "react-router-dom": "^5.0.1",
@@ -28,18 +40,7 @@
     "redux-form": "^8.2.4",
     "redux-thunk": "^2.3.0",
     "uniqid": "^5.0.3",
-    "validator": "^11.0.0",
-    "babel-cli": "^6.26.0",
-    "babel-core": "^6.26.3",
-    "babel-plugin-syntax-flow": "^6.18.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-0": "^6.24.1",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-flowtype": "^3.11.1",
-    "eslint-plugin-import": "^2.18.0",
-    "flow": "^0.2.3",
-    "flow-typed": "^2.5.2"
+    "validator": "^11.0.0"
   },
   "scripts": {
     "start-server-nodemon": "nodemon --exec npm run start-server",
@@ -72,6 +73,5 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

@@ -52,7 +52,7 @@ class Services extends React.Component {
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col">Счет</th>
+              <th scope="col">Вид услуги</th>
               <th scope="col">Сумма</th>
               <th scope="col">Статус заказа</th>
             </tr>
@@ -73,8 +73,6 @@ class Services extends React.Component {
   render() {
     const { currentPage, pages, services, status, offset } = this.props.servicesState;
     const currentServices = services ? services : [];
-    console.log('services');
-    console.log(this.props);
     if (status === 'success') {
       return this.renderServices(currentServices, parseInt(currentPage) + 1, pages, offset);
     }

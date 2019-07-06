@@ -44,8 +44,8 @@ class Registration extends React.Component {
 
   render() {
     const { handleSubmit, registrationState } = this.props;
-    return (
-      <div className="registration">
+    const renderForm = () => {
+      return (<div className="registration">
         <form onSubmit={handleSubmit(this.handleSubmit)}>
           <div className="form-group row">
             <label className="col-sm-2 col-form-label">Имя</label>
@@ -79,8 +79,14 @@ class Registration extends React.Component {
             </div>
           </div>
         </form>
-      </div>
-    );
+      </div>);
+    };
+
+    const renderSuccess = () => {
+      return (<div>На почту было отправлено письмо. Для завершения регистрации пройдите по ссылке в письме.</div>);
+    };
+
+    return registrationState === 'success' ? renderSuccess() : renderForm();
   }
 }
 

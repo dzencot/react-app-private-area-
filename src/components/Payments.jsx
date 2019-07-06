@@ -36,8 +36,7 @@ class Payments extends React.Component {
     loadPayments(num - 1);
   }
 
-  renderPayments(payments, currentPage, pages, offset) {
-    console.log(`currentPage:${currentPage}`);
+  renderPayments(payments, currentPage, pages, offset, balance) {
     const items = [];
     for (let i = 1; i <= pages; i += 1) {
       items.push(
@@ -49,6 +48,7 @@ class Payments extends React.Component {
 
     return (
       <div>
+        <div className="balance">Текущий баланс: {balance}</div>
         <table className="table">
           <thead>
             <tr>
@@ -72,11 +72,10 @@ class Payments extends React.Component {
   }
 
   render() {
-    const { currentPage, pages, payments, status, offset } = this.props.paymentsState;
+    const { currentPage, pages, payments, status, offset, balance } = this.props.paymentsState;
     const currentPayments = payments ? payments : [];
-    console.log(this.props);
     if (status === 'success') {
-      return this.renderPayments(currentPayments, parseInt(currentPage) + 1, pages, offset);
+      return this.renderPayments(currentPayments, parseInt(currentPage) + 1, pages, offset, balance);
     }
     return '';
   }

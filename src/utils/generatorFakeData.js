@@ -8,8 +8,9 @@ const statuses = [
 ];
 
 const services = [
-  'phone',
-  'internet',
+  'Телефония',
+  'Интернет',
+  'Другие услуги',
 ];
 
 const getFormatedDate = (today) => {
@@ -43,4 +44,8 @@ const generatePayment = () => {
   return { type, price, date: formatedDate };
 };
 
-export { generateService, generatePayment };
+const generateBalance = () => {
+  return faker.random.number();
+};
+
+export { generateService, generatePayment, generateBalance };

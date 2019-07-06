@@ -28,12 +28,13 @@ const registrationState = handleActions({
 }, 'none');
 
 const servicesState = handleActions({
+  [actions.authorizationRequest]() {
+    return {};
+  },
   [actions.loadServicesRequest](state) {
     return { ...state, status: 'request' };
   },
   [actions.loadServicesSuccess](state, { payload }) {
-    console.log('success services');
-    console.log(payload);
     const { currentPage, pages, services, offset } = payload;
     return { ...state, status: 'success',
       currentPage, pages, services, offset };
@@ -44,20 +45,56 @@ const servicesState = handleActions({
 }, {});
 
 const paymentsState = handleActions({
+  [actions.authorizationRequest]() {
+    return {};
+  },
   [actions.loadPaymentsRequest](state) {
     return { ...state, status: 'request' };
   },
   [actions.loadPaymentsSuccess](state, { payload }) {
-    const { currentPage, pages, payments, offset } = payload;
+    const { currentPage, pages, payments, offset, balance } = payload;
     return { ...state, status: 'success',
-      currentPage, pages, payments, offset };
+      currentPage, pages, payments, offset, balance };
   },
   [actions.loadPaymentsFailure](state) {
     return { ...state, status: 'failure' };
   },
 }, {});
 
+const infoState = handleActions({
+  [actions.authorizationRequest]() {
+    return {};
+  },
+  [actions.inputInfo](state, { payload }) {
+    const { name, value } = payload;
+    return { ...state, [name]: value };
+  },
+  [actions.loadInfoRequest](state) {
+    return { ...state, status: 'request' };
+  },
+  [actions.loadInfoSuccess](state, { payload }) {
+    const { name, lastName, paymentInfo, email } = payload;
+    return { ...state, status: 'success',
+      name, lastName, paymentInfo, email };
+  },
+  [actions.loadInfoFailure](state) {
+    return { ...state, status: 'failure' };
+  },
+  [actions.updateInfoRequest](state) {
+    return { ...state, status: 'requestUpdate' };
+  },
+  [actions.updateInfoSuccess](state) {
+    return { ...state, status: 'successUpdate' };
+  },
+  [actions.updateInfoFailure](state) {
+    return { ...state, status: 'failureUpdate' };
+  },
+}, {});
+
 const appState = handleActions({
+  [actions.authorizationRequest]() {
+    return {};
+  },
   [actions.registrationStart](state) {
     return { ...state, action: 'registration' };
   },
@@ -74,7 +111,7 @@ const appState = handleActions({
     return { ...state, authorized: true, action: 'payments' };
   },
   [actions.authorizationFailure](state) {
-    return { ...state, authorized: false };
+    return { ...state, action: '', authorized: false };
   },
 }, {});
 
@@ -85,5 +122,6 @@ export default combineReducers({
   appState,
   servicesState,
   paymentsState,
+  infoState,
   form: formReducer,
 });

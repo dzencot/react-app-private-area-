@@ -41,7 +41,7 @@ app.post('/auth', async (req, res) => {
   if (currentUser) {
     const sessionKey = getRandomKey();
     // TODO: настроить сессионные куки
-    req.cookies[sessionKeyName] = sessionKey;
+    // req.cookies[sessionKeyName] = sessionKey;
     // TODO: сделать сохранение разных сессий
     // if (!currentUser.sessions) {
     //   currentUser.sessions = [];
@@ -79,10 +79,13 @@ app.get('/registration', async (req, res) => {
     currentUser.activated = true;
     const updateResult = await adminUsers.updateUser(currentUser);
     if (updateResult) {
-      res.send(JSON.stringify({
-        status: 1,
-        result: 'Адрес успешно подтвержден',
-      }));
+      res.send(`
+      <div>
+        <div>
+          Адрес успешно подтвержден
+        </div>
+        <a href="http://localhost:3000">Войти в кабинет</a>
+      </div>`);
       return;
     }
   }
@@ -138,6 +141,7 @@ app.post('/registration', async (req, res) => {
     lastName,
     email,
     activationKey: randomString,
+    balance: generator.generateBalance(),
   };
   const result = await adminUsers.addUser(user);
   if (result) {
@@ -166,14 +170,62 @@ app.post('/registration', async (req, res) => {
     result: 0, status: 0, text: 'error' }));
 });
 
-app.get('/info', (req, res) => {
-  const sessionKey = req.cookies[sessionKeyName];
+app.get('/info', async (req, res) => {
+  // const sessionKey = req.cookies[sessionKeyName];
   const { key } = req.query;
-  res.send('good bye');
+  const user = await adminUsers.getUserBySession(key);
+  if (user.length === 0) {
+    res.send(JSON.stringify({
+      result: 0, status: 'unathorized', text: 'unathorized',
+    }));
+    return;
+  }
+  res.send(JSON.stringify({
+    status: 1, result: 1, data: user[0],
+  }));
+});
+
+app.patch('/info', async (req, res) => {
+  // const sessionKey = req.cookies[sessionKeyName];
+  const {
+    pass, oldPass,
+    name, lastName, email, paymentInfo } = req.body;
+  const passEncrypt = encrypt(pass);
+  const oldPassEncrypt = encrypt(oldPass);
+  const findUser = { pass: oldPassEncrypt };
+  const user = await adminUsers.getUser(findUser);
+  // const { login, pass } = req.body;
+  if (user.length === 0) {
+    res.send(JSON.stringify({
+      result: 0, status: 'unathorized', text: 'unathorized',
+    }));
+    return;
+  }
+  const newUserData = {
+    ...user,
+    login: email,
+    name,
+    lastName,
+    pass: passEncrypt,
+    email,
+    paymentInfo,
+  };
+
+  try {
+    await adminUsers.updateUser(newUserData);
+    res.send(JSON.stringify({
+      status: 1, result: 1, data: user[0],
+    }));
+  } catch (e) {
+    console.log(e);
+    res.send(JSON.stringify({
+      status: 0, result: 0, error: e
+    }));
+  }
 });
 
 app.get('/payments', async (req, res) => {
-  const sessionKey = req.cookies[sessionKeyName];
+  // const sessionKey = req.cookies[sessionKeyName];
   const { key, page } = req.query;
   const user = await adminUsers.getUserBySession(key);
   if (user.length === 0) {
@@ -193,11 +245,13 @@ app.get('/payments', async (req, res) => {
     currentPage: page,
     pages, payments,
     offset,
+    test: 'test',
+    balance: currentAccount.balance,
   }));
 });
 
 app.get('/services', async (req, res) => {
-  const sessionKey = req.cookies[sessionKeyName];
+  // const sessionKey = req.cookies[sessionKeyName];
   const { key, page } = req.query;
   const user = await adminUsers.getUserBySession(key);
   if (user.length === 0) {

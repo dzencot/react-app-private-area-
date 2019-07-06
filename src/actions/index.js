@@ -22,6 +22,11 @@ export const loadInfoRequest = createAction('LOADINFO_REQUEST');
 export const loadInfoSuccess = createAction('LOADINFO_SUCCESS');
 export const loadInfoFailure = createAction('LOADINFO_FAILURE');
 
+export const inputInfo = createAction('INPUT_INFO');
+export const updateInfoRequest = createAction('UPDATE_INFO_REQUEST');
+export const updateInfoSuccess = createAction('UPDATE_INFO_SUCCESS');
+export const updateInfoFailure = createAction('UPDATE_INFO_FAILURE');
+
 export const openPayments = createAction('LOADPAYMENTS_START');
 export const loadPaymentsRequest = createAction('LOADPAYMENTS_REQUEST');
 export const loadPaymentsSuccess = createAction('LOADPAYMENTS_SUCCESS');
@@ -88,14 +93,43 @@ export const loadInfo = () => async (dispatch) => {
     }).then((response) => {
       return response.json();
     });
-    const { status, data } = response;
+    const { status, data, result } = response;
     if (status === 1) {
       dispatch(loadInfoSuccess(data));
     } else {
+      if (result === 'unathorized') {
+        dispatch(authorizationFailure());
+      }
+
       dispatch(loadInfoFailure());
     }
   } catch (e) {
     dispatch(loadInfoFailure());
+    throw e;
+  }
+};
+
+export const updateInfo = (data) => async (dispatch) => {
+  dispatch(loadInfoRequest());
+  try {
+    const response = await fetch(`${urlServer}/info?key=${sessionKey}`, {
+      method: 'PATCH',
+      headers,
+      body: JSON.stringify(data),
+    }).then((response) => {
+      return response.json();
+    });
+    const { status, result } = response;
+    if (status === 1) {
+      if (result === 'unathorized') {
+        dispatch(authorizationFailure());
+      }
+      dispatch(updateInfoSuccess());
+    } else {
+      dispatch(updateInfoFailure());
+    }
+  } catch (e) {
+    dispatch(updateInfoFailure());
     throw e;
   }
 };
@@ -109,10 +143,13 @@ export const loadPayments = (pageNum) => async (dispatch) => {
     }).then((response) => {
       return response.json();
     });
-    const { result, status, currentPage, pages, payments, offset } = response;
+    const { status, result, currentPage, pages, payments, offset, balance } = response;
     if (status === 1) {
-      dispatch(loadPaymentsSuccess({ currentPage, pages, payments, offset }));
+      dispatch(loadPaymentsSuccess({ currentPage, pages, payments, offset, balance }));
     } else {
+      if (result === 'unathorized') {
+        dispatch(authorizationFailure());
+      }
       dispatch(loadPaymentsFailure());
     }
   } catch (e) {
@@ -130,9 +167,12 @@ export const loadServices = (pageNum) => async (dispatch) => {
     }).then((response) => {
       return response.json();
     });
-    const { result, status, currentPage, pages, services, offset } = response;
+    const { status, result, currentPage, pages, services, offset } = response;
     if (status === 1) {
       dispatch(loadServicesSuccess({ currentPage, pages, services, offset }));
+      if (result === 'unathorized') {
+        dispatch(authorizationFailure());
+      }
     } else {
       dispatch(loadServicesFailure());
     }
