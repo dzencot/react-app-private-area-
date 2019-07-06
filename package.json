@@ -43,7 +43,7 @@
     "validator": "^11.0.0"
   },
   "scripts": {
-    "start-server-nodemon": "nodemon --exec npm run start-server",
+    "start-server-nodemon": "npm run start-server",
     "start-server": "babel-node src/server.js",
     "start": "npm run start-server-nodemon & npm run start-client",
     "start-client": "react-scripts start",
