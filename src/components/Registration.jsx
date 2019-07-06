@@ -75,7 +75,7 @@ class Registration extends React.Component {
           </div>
           <div className="form-group row">
             <div className="col-sm-10">
-              <button type="submit" disabled={registrationState === 'requested'} className="btn btn-primary">Зарегестрироваться</button>
+              <button type="submit" disabled={registrationState === 'requested'} className="btn btn-primary">Зарегистрироваться</button>
             </div>
           </div>
         </form>

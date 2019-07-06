@@ -1,6 +1,7 @@
 import { createAction } from 'redux-actions';
 
-const urlServer = 'http://localhost:8000';
+const { protocol, hostname } = window.location;
+const urlServer = `${protocol}//${hostname}:8000`;
 const headers = {
   'Content-Type': 'application/json',
   'Accept': 'application/json',
