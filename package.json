@@ -41,7 +41,7 @@
     "redux-form": "^8.2.4",
     "redux-thunk": "^2.3.0",
     "uniqid": "^5.0.3",
-    "validator": "^11.0.0"
+    "validator": "^13.7.0"
   },
   "scripts": {
     "start-server-nodemon": "nodemon --exec npm run start-server",
